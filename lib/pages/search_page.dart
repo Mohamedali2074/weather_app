@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:try_one/cubits/weather_cubit/weather_cubit.dart';
 import 'package:try_one/models/Weather_Model.dart';
 import 'package:try_one/providers/weather_provider.dart';
 import 'package:try_one/services/weather_service.dart';
 
 class SearchPage extends StatelessWidget {
   String? cityName;
-
-  SearchPage({this.updateUi});
-  VoidCallback? updateUi;
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +21,10 @@ class SearchPage extends StatelessWidget {
           child: TextField(
             onSubmitted: (data) async {
               cityName = data;
-              WeatherService service = WeatherService();
 
-              WeatherModel? weather =
-                  await service.getWeather(cityName: cityName!);
-              Provider.of<WeatherProvider>(context, listen: false).weatherData =
-                  weather;
-              Provider.of<WeatherProvider>(context, listen: false).cityName =
-                  cityName;
+              BlocProvider.of<WeatherCubit>(context)
+                  .getWeather(cityName: cityName!);
+              BlocProvider.of<WeatherCubit>(context).cityName = cityName;
               Navigator.pop(context);
             },
             decoration: InputDecoration(
@@ -46,3 +41,15 @@ class SearchPage extends StatelessWidget {
     );
   }
 }
+
+
+
+// WeatherService service = WeatherService();
+
+//               WeatherModel? weather =
+//                   await service.getWeather(cityName: cityName!);
+//               Provider.of<WeatherProvider>(context, listen: false).weatherData =
+//                   weather;
+//               Provider.of<WeatherProvider>(context, listen: false).cityName =
+//                   cityName;
+//               Navigator.pop(context);
